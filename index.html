@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CiroSlots</title>
+  <style>
+    body { background: #0b0f14; color: #e8f0f2; font-family: sans-serif; text-align: center; }
+    h1 { color: #39ff88; font-size: 48px; }
+    h2 { color: #00e5ff; }
+    section { max-width: 600px; margin: 20px auto; padding: 16px; background: #141b24; border-radius: 10px; }
+    button { background: none; color: #00e5ff; border: 2px solid #00e5ff; padding: 8px 14px; border-radius: 6px; cursor: pointer; margin: 4px; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { padding: 6px; border-bottom: 1px solid #22303d; }
+    a { color: #39ff88; }
+  </style>
+</head>
+<body>
+  <h1>CiroSlots</h1>
+
+  <section>
+    <h2>Bienvenidos, loquitos</h2>
+    <p>Mirá el stream en <a href="https://kick.com/cirotop" target="_blank">Kick</a></p>
+    <p>Código: <b>CIROTOP</b></p>
+  </section>
+
+  <section>
+    <h2>Leaderboard</h2>
+    <button onclick="cargarLeaderboard('winovo')">WinOvo</button>
+    <button onclick="cargarLeaderboard('razed')">Razed</button>
+    <p id="estado"></p>
+    <table id="tabla"></table>
+  </section>
+
+  <section>
+    <h2>Blackjack</h2>
+    <p id="crupier"></p>
+    <p id="jugador"></p>
+    <p id="mensaje"></p>
+    <button onclick="repartir()">Repartir</button>
+    <button onclick="pedir()">Pedir</button>
+    <button onclick="plantarse()">Plantarse</button>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
