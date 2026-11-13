@@ -1,236 +1,560 @@
-/* ===== VARIABLES DE COLORES ===== */
-/* Las defino una vez y las uso en todo el archivo */
+/* =====================================================
+   CIROTOP - style.css
+   ===================================================== */
+
+/* ===== VARIABLES (colores que uso en toda la página) ===== */
 :root {
-  --fondo: #0b0f14;      /* negro azulado */
-  --tarjeta: #141b24;    /* fondo de las cajas */
-  --verde: #00ff88;      /* verde neón */
-  --cian: #00e5ff;       /* cian neón */
-  --texto: #e6edf3;      /* texto claro */
+  --fondo: #06080c;          /* negro de fondo */
+  --tarjeta: rgba(255, 255, 255, 0.04); /* cajas semitransparentes */
+  --borde: rgba(255, 255, 255, 0.08);   /* bordes suaves */
+  --verde: #00ff88;          /* verde neón (color principal) */
+  --cian: #00e5ff;           /* cian neón */
+  --rojo: #ff3355;           /* rojo de "en vivo" */
+  --oro: #ffd34d;            /* 1er puesto */
+  --plata: #cfd8e3;          /* 2do puesto */
+  --bronce: #ff9a5a;         /* 3er puesto */
+  --texto: #e8eef5;          /* texto principal */
+  --gris: #8b97a6;           /* texto secundario */
 }
 
-/* ===== ESTILOS GENERALES ===== */
+/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; /* el padding no agranda las cajas */
+  box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth; /* scroll suave al tocar el menú */
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--fondo);
+  font-family: 'Inter', sans-serif;
   color: var(--texto);
-  font-family: 'Orbitron', sans-serif;
+  background-color: var(--fondo);
+  /* Luces de colores difuminadas + cuadrícula de fondo */
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(0, 255, 136, 0.15), transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(0, 229, 255, 0.12), transparent 40%),
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: auto, auto, 40px 40px, 40px 40px;
+  background-attachment: fixed;
 }
 
-h1, h2 {
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 2px;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* ===== MENÚ ===== */
 .menu {
-  position: sticky;   /* queda fijo arriba al hacer scroll */
+  position: sticky;
   top: 0;
+  z-index: 10;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background: rgba(11, 15, 20, 0.95);
-  border-bottom: 2px solid var(--verde);
-  z-index: 10;
+  padding: 14px 6%;
+  background: rgba(6, 8, 12, 0.8);
+  backdrop-filter: blur(12px); /* efecto vidrio */
+  border-bottom: 1px solid var(--borde);
 }
 
+/* Logo CIROTOP: CIRO en blanco, TOP en verde */
 .logo {
+  font-family: 'Bebas Neue', sans-serif;
   font-size: 2rem;
-  color: var(--verde);
+  letter-spacing: 3px;
 }
 
 .logo span {
-  color: var(--cian);
+  color: var(--verde);
+  text-shadow: 0 0 12px var(--verde);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .nav a {
-  color: var(--texto);
-  text-decoration: none;
-  margin-left: 20px;
   font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gris);
+  transition: 0.2s;
 }
 
 .nav a:hover {
-  color: var(--verde);
+  color: var(--texto);
 }
 
-/* El botón ☰ está oculto en compu */
+/* Botón "En vivo" del menú */
+.nav .nav-vivo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  color: var(--texto);
+  border: 1px solid var(--rojo);
+  border-radius: 999px;
+  background: rgba(255, 51, 85, 0.1);
+}
+
+/* Puntito rojo que titila */
+.punto-vivo {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rojo);
+  box-shadow: 0 0 8px var(--rojo);
+  animation: titilar 1.2s infinite;
+}
+
+@keyframes titilar {
+  50% { opacity: 0.2; }
+}
+
 .btn-menu {
   display: none;
   background: none;
   border: none;
   color: var(--verde);
-  font-size: 2rem;
+  font-size: 1.8rem;
   cursor: pointer;
 }
 
-/* ===== INICIO ===== */
-.inicio {
+/* ===== BANDA DE ANUNCIOS ===== */
+.banda {
+  overflow: hidden;
+  white-space: nowrap;
+  background: linear-gradient(90deg, var(--verde), var(--cian));
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 9px 0;
+}
+
+/* El texto se desplaza de derecha a izquierda sin parar */
+.banda-texto {
+  display: inline-block;
+  animation: desplazar 30s linear infinite;
+}
+
+@keyframes desplazar {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); } /* -50% porque el texto está repetido 2 veces */
+}
+
+/* ===== HERO ===== */
+.hero {
   text-align: center;
-  padding: 100px 20px;
+  padding: 90px 20px 70px;
 }
 
-.inicio h2 {
-  font-size: 4rem;
+/* Textito chico arriba de los títulos */
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cian);
+  margin-bottom: 10px;
+}
+
+.titulo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 16vw, 11rem); /* se achica solo en pantallas chicas */
+  line-height: 0.9;
+  letter-spacing: 6px;
+}
+
+.titulo span {
   color: var(--verde);
-  text-shadow: 0 0 15px var(--verde); /* efecto neón */
+  text-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
 }
 
-.inicio p {
-  margin: 20px 0 30px;
+.subtitulo {
+  font-size: 1.3rem;
+  color: var(--gris);
+  margin: 14px 0 30px;
+}
+
+/* Caja del total de premios */
+.premio-total {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 14px 40px;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  border-radius: 16px;
+  background: rgba(0, 255, 136, 0.06);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.15);
+  transition: 0.3s;
+}
+
+.premio-total:hover {
+  transform: translateY(-3px);
+}
+
+.premio-total small {
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: var(--gris);
+}
+
+.premio-total strong {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.4rem;
+  color: var(--verde);
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 30px 0;
 }
 
 /* ===== BOTONES ===== */
 .boton {
   display: inline-block;
-  padding: 12px 30px;
-  background: var(--verde);
-  color: var(--fondo);
+  padding: 14px 32px;
   font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
   font-weight: 700;
-  text-decoration: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #000;
+  background: linear-gradient(90deg, var(--verde), var(--cian));
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .boton:hover {
-  background: var(--cian);
-  box-shadow: 0 0 20px var(--cian);
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
 }
 
-/* ===== SECCIONES ===== */
-.seccion {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 30px 20px;
+.boton:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* Variante con solo borde */
+.boton-borde {
+  color: var(--texto);
+  background: transparent;
+  border: 1px solid var(--verde);
+}
+
+/* ===== REDES ===== */
+.redes {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.redes a {
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
   background: var(--tarjeta);
-  border: 1px solid var(--cian);
-  border-radius: 12px;
+  transition: 0.2s;
+}
+
+.redes a:hover {
+  border-color: var(--verde);
+}
+
+/* ===== SECCIONES (cajas) ===== */
+.seccion {
+  max-width: 900px;
+  margin: 0 auto 50px;
+  padding: 45px 30px;
   text-align: center;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
 }
 
 .seccion h2 {
-  font-size: 2.5rem;
-  color: var(--cian);
-  margin-bottom: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  letter-spacing: 3px;
+}
+
+.seccion h2 span {
+  color: var(--verde);
+}
+
+.texto-chico {
+  color: var(--gris);
+  margin: 6px 0 25px;
+}
+
+/* Código CIROTOP resaltado */
+.codigo {
+  color: var(--verde);
+  font-family: 'Orbitron', sans-serif;
+  padding: 2px 8px;
+  border: 1px dashed var(--verde);
+  border-radius: 6px;
 }
 
 /* ===== CONTADOR ===== */
+.termina {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: var(--gris);
+}
+
 .contador {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin: 25px 0;
+  gap: 12px;
+  margin: 12px 0 40px;
 }
 
 .contador div {
-  background: var(--fondo);
-  border: 1px solid var(--verde);
-  border-radius: 8px;
-  padding: 10px;
-  width: 75px;
+  width: 80px;
+  padding: 12px 0;
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .contador span {
   display: block;
-  font-size: 1.6rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
   color: var(--verde);
 }
 
 .contador small {
   font-size: 0.7rem;
+  color: var(--gris);
+  text-transform: uppercase;
 }
 
-/* ===== TABLA ===== */
-.tabla {
-  width: 100%;
-  border-collapse: collapse;
+/* ===== PODIO (top 3) ===== */
+.podio {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* alinea abajo para que el 1ro quede más alto */
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
-.tabla th {
-  color: var(--verde);
-  padding: 10px;
-  border-bottom: 2px solid var(--verde);
+/* Cada tarjeta del podio */
+.puesto {
+  flex: 1;
+  max-width: 220px;
+  padding: 22px 12px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--color);       /* --color lo pongo en cada clase de abajo */
+  box-shadow: 0 0 25px -8px var(--color);
 }
 
-.tabla td {
-  padding: 10px;
-  border-bottom: 1px solid #2a3440;
+/* Colores y alturas de cada puesto */
+.puesto-1 { --color: var(--oro); padding-top: 45px; }
+.puesto-2 { --color: var(--plata); }
+.puesto-3 { --color: var(--bronce); }
+
+.puesto .numero {
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 10px;
+  display: grid;
+  place-items: center;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  color: #000;
+  border-radius: 50%;
+  background: var(--color);
 }
 
-/* Clase que el JS le pone al 1er puesto */
-.primero td {
-  color: gold;
+.puesto .nombre {
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis; /* si el nombre es muy largo pone "..." */
+  white-space: nowrap;
+}
+
+.puesto .apostado {
+  font-size: 0.8rem;
+  color: var(--gris);
+  margin: 4px 0 10px;
+}
+
+.puesto .premio {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.3rem;
+  color: var(--color);
+}
+
+/* ===== LISTA (4to en adelante) ===== */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 50px 1fr auto auto; /* puesto | nombre | apostado | premio */
+  gap: 16px;
+  align-items: center;
+  padding: 14px 20px;
+  text-align: left;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  transition: 0.2s;
+}
+
+.fila:hover {
+  border-color: rgba(0, 255, 136, 0.4);
+}
+
+.fila .pos {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--gris);
+}
+
+.fila .apostado {
+  color: var(--gris);
+  font-size: 0.85rem;
+}
+
+.fila .premio {
+  font-family: 'Orbitron', sans-serif;
   font-weight: 700;
+  color: var(--verde);
 }
 
 /* ===== RULETA ===== */
 .resultado {
-  font-size: 2rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
   color: var(--verde);
-  margin: 30px 0;
-  min-height: 50px;
+  text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+  padding: 30px 10px;
+  margin-bottom: 25px;
+  border: 1px dashed rgba(0, 255, 136, 0.4);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Clase que el JS agrega cuando la ruleta frena */
+.resultado.ganador {
+  animation: festejo 0.5s ease 2;
+}
+
+@keyframes festejo {
+  50% { transform: scale(1.06); }
+}
+
+/* ===== VIDEO DE KICK ===== */
+.video {
+  aspect-ratio: 16 / 9; /* mantiene la forma de video */
+  margin-bottom: 25px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--borde);
+}
+
+.video iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 /* ===== PIE ===== */
 .pie {
   text-align: center;
-  padding: 30px;
-  font-size: 0.8rem;
-  border-top: 2px solid var(--verde);
-  margin-top: 40px;
-}
-
-.pie a {
-  color: var(--cian);
+  padding: 40px 20px;
+  font-size: 0.85rem;
+  color: var(--gris);
+  border-top: 1px solid var(--borde);
 }
 
 .pie p {
-  margin: 5px 0;
+  margin: 4px 0;
 }
 
-/* ===== CELULAR (pantallas chicas) ===== */
-@media (max-width: 700px) {
+/* ===== CELULAR ===== */
+@media (max-width: 760px) {
   .btn-menu {
-    display: block; /* aparece el ☰ */
+    display: block;
   }
 
+  /* El menú queda oculto y aparece abajo del header */
   .nav {
-    display: none; /* el menú arranca oculto */
+    display: none;
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
-    background: var(--fondo);
     flex-direction: column;
-    text-align: center;
+    padding: 20px;
+    background: var(--fondo);
+    border-bottom: 1px solid var(--borde);
   }
 
-  /* Cuando el JS le agrega la clase "abierto", se muestra */
+  /* El JS le agrega "abierto" para mostrarlo */
   .nav.abierto {
     display: flex;
   }
 
-  .nav a {
-    margin: 10px 0;
+  .seccion {
+    margin: 0 12px 30px;
+    padding: 35px 16px;
   }
 
-  .inicio h2 {
-    font-size: 2.8rem;
+  .contador div {
+    width: 64px;
   }
 
-  .tabla {
-    font-size: 0.7rem;
+  .contador span {
+    font-size: 1.3rem;
+  }
+
+  .podio {
+    gap: 6px;
+  }
+
+  .puesto {
+    padding: 16px 6px;
+  }
+
+  .puesto-1 {
+    padding-top: 30px;
+  }
+
+  .fila {
+    grid-template-columns: 34px 1fr auto;
+    padding: 12px 14px;
+  }
+
+  /* En celular escondo la columna "apostado" de la lista */
+  .fila .apostado {
+    display: none;
   }
 }

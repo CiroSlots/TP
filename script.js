@@ -1,11 +1,12 @@
 // =====================================================
-//  CIROSLOTS - script.js
-//  Cosas que hace este archivo:
+//  CIROTOP - script.js
+//  Qué hace este archivo:
 //   1. Abrir/cerrar el menú en celular
-//   2. Traer el leaderboard de Razed desde mi API y mostrarlo
-//   3. Contador regresivo hasta que termina la LB
-//   4. Ruleta que elige un slot al azar
-//   5. Poner el año actual en el pie de página
+//   2. Traer el leaderboard de Razed desde mi API
+//   3. Dibujar el podio (top 3) y la lista (del 4to en adelante)
+//   4. Contador regresivo hasta que termina la LB
+//   5. Ruleta que elige un slot al azar
+//   6. Poner el año actual en el pie
 // =====================================================
 
 
@@ -13,31 +14,27 @@
 // 1. MENÚ EN CELULAR
 // -----------------------------------------------------
 
-// Busco el botón ☰ y el menú por su id
 const btnMenu = document.getElementById("btnMenu");
 const nav = document.getElementById("nav");
 
-// Cuando hago click en el botón, agrego o saco la clase "abierto"
-// (toggle = si la tiene la saca, si no la tiene la pone)
+// Al tocar ☰ agrego o saco la clase "abierto" (el CSS lo muestra u oculta)
 btnMenu.addEventListener("click", function () {
   nav.classList.toggle("abierto");
 });
 
 
 // -----------------------------------------------------
-// 2. LEADERBOARD DE RAZED (con mi API)
+// 2. DATOS DEL LEADERBOARD
 // -----------------------------------------------------
 
-// Dirección de mi API. Es un archivo en /api/razed.js en Vercel
-// que le pide los datos a Razed con mi clave (así la clave no queda
-// visible en el navegador).
+// Mi API en Vercel (/api/razed.js). Ella le pide los datos a Razed
+// con mi clave, así la clave no queda visible en el navegador.
 const URL_API = "/api/razed";
 
-// Premios para cada puesto (el 1ro gana 150, el 2do 100, etc.)
+// Premio de cada puesto (posición 0 = 1er puesto)
 const premios = [150, 100, 75, 50, 25];
 
-// Datos de respaldo: se usan solo si la API no responde
-// (por ejemplo si abro el index.html sin internet)
+// Datos de respaldo por si la API no responde
 const jugadoresRespaldo = [
   { nombre: "Loquito123", apostado: 15420 },
   { nombre: "ElRey77", apostado: 9800 },
@@ -46,124 +43,135 @@ const jugadoresRespaldo = [
   { nombre: "BonusHunter", apostado: 3900 }
 ];
 
-// Función que le pide los datos a la API
-// "async" significa que la función espera respuestas de internet
+// Pide los datos a la API ("async" = espera respuestas de internet)
 async function cargarLeaderboard() {
   try {
-    // fetch hace el pedido a la API y "await" espera la respuesta
-    const respuesta = await fetch(URL_API);
+    const respuesta = await fetch(URL_API);   // hago el pedido
+    const datos = await respuesta.json();     // lo paso a objeto JS
 
-    // Convierto la respuesta a JSON (objeto de JavaScript)
-    const datos = await respuesta.json();
-
-    // Mi API devuelve la lista dentro de "users"
-    // (si la tuya usa otro nombre, cambialo acá)
-    const lista = datos.users;
-
-    // Paso cada jugador al formato que usa mi tabla: { nombre, apostado }
-    // map recorre la lista y devuelve una lista nueva
-    const jugadores = lista.map(function (jugador) {
+    // Mi API devuelve la lista en "users" (si usa otro nombre, cambiarlo acá)
+    const jugadores = datos.users.map(function (jugador) {
       return {
-        nombre: jugador.username,  // nombre del jugador en la API
+        nombre: jugador.username,  // nombre en la API
         apostado: jugador.wager    // monto apostado en la API
       };
     });
 
     mostrarLeaderboard(jugadores);
   } catch (error) {
-    // Si algo falla (sin internet, API caída, etc.) uso los datos de respaldo
-    console.log("No se pudo cargar la API, uso datos de respaldo:", error);
+    // Si falla algo uso los datos de respaldo
+    console.log("API no disponible, uso datos de respaldo:", error);
     mostrarLeaderboard(jugadoresRespaldo);
   }
 }
 
-// Función que dibuja la tabla con la lista de jugadores que recibe
-function mostrarLeaderboard(jugadores) {
-  // Busco el <tbody> donde van las filas y lo vacío
-  const cuerpoTabla = document.getElementById("cuerpoTabla");
-  cuerpoTabla.innerHTML = "";
 
-  // Ordeno los jugadores de mayor a menor según lo apostado
+// -----------------------------------------------------
+// 3. DIBUJAR PODIO Y LISTA
+// -----------------------------------------------------
+
+// Pasa un número a formato plata: 15420 -> "$15,420.00"
+function formatoPlata(numero) {
+  return "$" + Number(numero).toLocaleString("en-US", { minimumFractionDigits: 2 });
+}
+
+function mostrarLeaderboard(jugadores) {
+  const podio = document.getElementById("podio");
+  const lista = document.getElementById("lista");
+
+  // Vacío lo que había antes
+  podio.innerHTML = "";
+  lista.innerHTML = "";
+
+  // Ordeno de mayor a menor apostado
   jugadores.sort(function (a, b) {
     return b.apostado - a.apostado;
   });
 
-  // Muestro solo los que tienen premio (top 5)
+  // Recorro solo los puestos que tienen premio
   for (let i = 0; i < jugadores.length && i < premios.length; i++) {
-    // Creo una fila nueva
-    const fila = document.createElement("tr");
+    const jugador = jugadores[i];
+    const puesto = i + 1; // el array empieza en 0, el puesto en 1
 
-    // Si es el primero (posición 0) le pongo la clase dorada
-    if (i === 0) {
-      fila.classList.add("primero");
+    if (puesto <= 3) {
+      // ---- TOP 3: tarjeta del podio ----
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "puesto puesto-" + puesto;
+      tarjeta.innerHTML =
+        "<div class='numero'>" + puesto + "</div>" +
+        "<div class='nombre'>" + jugador.nombre + "</div>" +
+        "<div class='apostado'>" + formatoPlata(jugador.apostado) + "</div>" +
+        "<div class='premio'>$" + premios[i] + "</div>";
+
+      // Orden visual del podio: 2do - 1ro - 3ro
+      // (el 1ro va al medio, los demás se agregan a los costados)
+      if (puesto === 2) {
+        podio.prepend(tarjeta);      // al principio (izquierda)
+      } else {
+        podio.appendChild(tarjeta);  // al final (derecha)
+      }
+    } else {
+      // ---- DEL 4TO EN ADELANTE: fila de la lista ----
+      const fila = document.createElement("div");
+      fila.className = "fila";
+      fila.innerHTML =
+        "<span class='pos'>#" + puesto + "</span>" +
+        "<span>" + jugador.nombre + "</span>" +
+        "<span class='apostado'>" + formatoPlata(jugador.apostado) + "</span>" +
+        "<span class='premio'>$" + premios[i] + "</span>";
+      lista.appendChild(fila);
     }
-
-    // Lleno la fila con los datos (i + 1 porque el array empieza en 0)
-    // toFixed(2) deja el número con 2 decimales
-    fila.innerHTML =
-      "<td>#" + (i + 1) + "</td>" +
-      "<td>" + jugadores[i].nombre + "</td>" +
-      "<td>$" + Number(jugadores[i].apostado).toFixed(2) + "</td>" +
-      "<td>$" + premios[i] + "</td>";
-
-    // Agrego la fila a la tabla
-    cuerpoTabla.appendChild(fila);
   }
 }
 
-// Cargo la tabla apenas abre la página...
-cargarLeaderboard();
+// Muestro la suma de todos los premios en la portada
+let total = 0;
+for (let i = 0; i < premios.length; i++) {
+  total = total + premios[i];
+}
+document.getElementById("totalPremios").textContent = total;
 
-// ...y la vuelvo a cargar cada 60 segundos para que esté actualizada
+// Cargo el leaderboard al abrir la página y cada 60 segundos
+cargarLeaderboard();
 setInterval(cargarLeaderboard, 60000);
 
 
 // -----------------------------------------------------
-// 3. CONTADOR REGRESIVO
+// 4. CONTADOR REGRESIVO
 // -----------------------------------------------------
 
-// Fecha en que termina la leaderboard
+// Fecha y hora en que termina la LB
 const fechaFin = new Date("2026-12-31T23:59:59");
 
-// Función que calcula cuánto falta y lo muestra
 function actualizarContador() {
-  const ahora = new Date();
-
-  // Diferencia en milisegundos entre el final y ahora
-  let diferencia = fechaFin - ahora;
-
-  // Si ya terminó, dejo todo en 0
+  // Milisegundos que faltan (si ya pasó, queda en 0)
+  let diferencia = fechaFin - new Date();
   if (diferencia < 0) {
     diferencia = 0;
   }
 
-  // Paso los milisegundos a días, horas, minutos y segundos
-  // (1000 ms = 1 seg, 60 seg = 1 min, 60 min = 1 hora, 24 horas = 1 día)
+  // Convierto: 1000 ms = 1 seg, 60 seg = 1 min, 60 min = 1 h, 24 h = 1 día
   const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
   const horas = Math.floor(diferencia / (1000 * 60 * 60)) % 24;
   const minutos = Math.floor(diferencia / (1000 * 60)) % 60;
   const segundos = Math.floor(diferencia / 1000) % 60;
 
-  // Muestro los números en el HTML
-  // padStart(2, "0") hace que el 5 se vea como 05
+  // padStart(2, "0") muestra 5 como 05
   document.getElementById("dias").textContent = String(dias).padStart(2, "0");
   document.getElementById("horas").textContent = String(horas).padStart(2, "0");
   document.getElementById("minutos").textContent = String(minutos).padStart(2, "0");
   document.getElementById("segundos").textContent = String(segundos).padStart(2, "0");
 }
 
-// Lo ejecuto una vez apenas carga la página...
+// Una vez al cargar y después cada 1 segundo
 actualizarContador();
-
-// ...y después cada 1 segundo (1000 ms) para que se actualice solo
 setInterval(actualizarContador, 1000);
 
 
 // -----------------------------------------------------
-// 4. RULETA DE SLOTS
+// 5. RULETA DE SLOTS
 // -----------------------------------------------------
 
-// Lista de slots que puede elegir la ruleta
 const slots = [
   "Gates of Olympus",
   "Sweet Bonanza",
@@ -178,33 +186,30 @@ const slots = [
 const btnGirar = document.getElementById("btnGirar");
 const resultadoRuleta = document.getElementById("resultadoRuleta");
 
-// Cuando toco GIRAR...
 btnGirar.addEventListener("click", function () {
-  // Desactivo el botón para que no lo toquen mientras gira
-  btnGirar.disabled = true;
+  btnGirar.disabled = true;                    // bloqueo el botón mientras gira
+  resultadoRuleta.classList.remove("ganador"); // saco la animación anterior
 
-  let vueltas = 0; // cuento cuántas veces cambió el nombre
+  let vueltas = 0;
 
-  // Cada 100 ms muestro un slot al azar (efecto de que está girando)
+  // Cada 100 ms muestro un slot al azar (efecto de que gira)
   const giro = setInterval(function () {
-    // Número al azar entre 0 y la cantidad de slots - 1
     const numeroAzar = Math.floor(Math.random() * slots.length);
     resultadoRuleta.textContent = slots[numeroAzar];
-
     vueltas++;
 
-    // Cuando llega a 20 vueltas, frena
+    // A las 20 vueltas frena
     if (vueltas === 20) {
-      clearInterval(giro);        // corto el intervalo
-      btnGirar.disabled = false;  // vuelvo a activar el botón
+      clearInterval(giro);
+      resultadoRuleta.classList.add("ganador"); // animación de festejo
+      btnGirar.disabled = false;
     }
   }, 100);
 });
 
 
 // -----------------------------------------------------
-// 5. AÑO EN EL PIE DE PÁGINA
+// 6. AÑO EN EL PIE
 // -----------------------------------------------------
 
-// Pongo el año actual automáticamente (así no lo tengo que cambiar a mano)
 document.getElementById("anio").textContent = new Date().getFullYear();

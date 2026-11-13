@@ -1,48 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Configuración básica de la página -->
+  <!-- Configuración básica -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CiroSlots</title>
+  <title>CIROTOP | Slots Streamer</title>
 
-  <!-- Fuentes de Google (las mismas que uso en la marca) -->
+  <!-- Fuentes de Google: Bebas Neue (títulos), Orbitron (números), Inter (textos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <!-- Hoja de estilos -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ===== MENÚ DE NAVEGACIÓN ===== -->
+  <!-- ===== MENÚ ===== -->
   <header class="menu">
-    <h1 class="logo">CIRO<span>SLOTS</span></h1>
+    <a href="#inicio" class="logo">CIRO<span>TOP</span></a>
 
-    <!-- Botón que solo se ve en celular para abrir/cerrar el menú -->
+    <!-- Botón ☰ (solo se ve en celular) -->
     <button id="btnMenu" class="btn-menu">☰</button>
 
     <nav id="nav" class="nav">
       <a href="#inicio">Inicio</a>
       <a href="#leaderboard">Leaderboard</a>
       <a href="#ruleta">Ruleta</a>
-      <a href="#redes">Redes</a>
+      <a href="https://kick.com/cirotop" target="_blank" class="nav-vivo">
+        <span class="punto-vivo"></span> En Vivo en Kick
+      </a>
     </nav>
   </header>
 
-  <!-- ===== SECCIÓN INICIO ===== -->
-  <section id="inicio" class="inicio">
-    <h2>BIENVENIDOS LOQUITOS</h2>
-    <p>Streams de slots en Kick, leaderboards con premios y mucho más.</p>
-    <a class="boton" href="https://kick.com/cirotop" target="_blank">VER EN KICK</a>
+  <!-- ===== BANDA DE ANUNCIOS (se mueve sola con CSS) ===== -->
+  <div class="banda">
+    <div class="banda-texto">
+      🔴 STREAM TODOS LOS DÍAS 22:00 HS &nbsp;•&nbsp; CÓDIGO <b>CIROTOP</b> &nbsp;•&nbsp;
+      LEADERBOARD EN RAZED &nbsp;•&nbsp; RULETA GRATIS &nbsp;•&nbsp; SUMATE AL DISCORD &nbsp;•&nbsp;
+      🔴 STREAM TODOS LOS DÍAS 22:00 HS &nbsp;•&nbsp; CÓDIGO <b>CIROTOP</b> &nbsp;•&nbsp;
+      LEADERBOARD EN RAZED &nbsp;•&nbsp; RULETA GRATIS &nbsp;•&nbsp; SUMATE AL DISCORD &nbsp;•&nbsp;
+    </div>
+  </div>
+
+  <!-- ===== HERO (portada) ===== -->
+  <section id="inicio" class="hero">
+    <p class="etiqueta">Slots Streamer · Kick</p>
+    <h1 class="titulo">CIRO<span>TOP</span></h1>
+    <p class="subtitulo">Tu streamer que sí te hace ganar.</p>
+
+    <!-- Caja con el total de premios -->
+    <a href="#leaderboard" class="premio-total">
+      <small>EN PREMIOS</small>
+      <strong>$<span id="totalPremios">0</span>+</strong>
+    </a>
+
+    <div class="botones">
+      <a href="#leaderboard" class="boton">Ver Leaderboard</a>
+      <a href="https://kick.com/cirotop" target="_blank" class="boton boton-borde">Ver en Kick</a>
+    </div>
+
+    <!-- Redes sociales -->
+    <div class="redes">
+      <a href="https://kick.com/cirotop" target="_blank">🟢 Kick</a>
+      <a href="#" target="_blank">💬 Discord</a>
+      <a href="#" target="_blank">📸 Instagram</a>
+    </div>
   </section>
 
-  <!-- ===== SECCIÓN LEADERBOARD (RAZED) ===== -->
+  <!-- ===== LEADERBOARD RAZED ===== -->
   <section id="leaderboard" class="seccion">
-    <h2>LEADERBOARD RAZED</h2>
-    <p>Usá el código <strong>CIROTOP</strong> para participar.</p>
+    <p class="etiqueta"><span class="punto-vivo"></span> Ranking en vivo</p>
+    <h2>LEADERBOARD <span>RAZED</span></h2>
+    <p class="texto-chico">Jugá en Razed con el código <b class="codigo">CIROTOP</b> y competí por los premios.</p>
 
-    <!-- Contador regresivo: el JS va cambiando estos números -->
+    <!-- Contador regresivo -->
+    <p class="termina">TERMINA EN</p>
     <div class="contador">
       <div><span id="dias">00</span><small>Días</small></div>
       <div><span id="horas">00</span><small>Horas</small></div>
@@ -50,35 +82,40 @@
       <div><span id="segundos">00</span><small>Seg</small></div>
     </div>
 
-    <!-- Tabla: las filas las agrega el JS -->
-    <table class="tabla">
-      <thead>
-        <tr>
-          <th>Puesto</th>
-          <th>Jugador</th>
-          <th>Apostado</th>
-          <th>Premio</th>
-        </tr>
-      </thead>
-      <tbody id="cuerpoTabla"></tbody>
-    </table>
+    <!-- Podio: el JS pone acá el top 3 -->
+    <div id="podio" class="podio"></div>
+
+    <!-- Lista: el JS pone acá del 4to en adelante -->
+    <div id="lista" class="lista"></div>
   </section>
 
-  <!-- ===== SECCIÓN RULETA DE SLOTS ===== -->
+  <!-- ===== RULETA DE SLOTS ===== -->
   <section id="ruleta" class="seccion">
-    <h2>RULETA DE SLOTS</h2>
-    <p>¿No sabés qué jugar? Girá la ruleta.</p>
+    <p class="etiqueta">Gratis</p>
+    <h2>RULETA DE <span>SLOTS</span></h2>
+    <p class="texto-chico">¿No sabés qué jugar? Girá y que decida la suerte.</p>
 
-    <!-- Acá el JS muestra el nombre del slot -->
-    <div id="resultadoRuleta" class="resultado">???</div>
-
+    <div id="resultadoRuleta" class="resultado">? ? ?</div>
     <button id="btnGirar" class="boton">GIRAR</button>
   </section>
 
-  <!-- ===== PIE DE PÁGINA ===== -->
-  <footer id="redes" class="pie">
-    <p>Seguime en <a href="https://kick.com/cirotop" target="_blank">KICK.COM/CIROTOP</a></p>
-    <p>© <span id="anio"></span> CiroSlots — Jugá con responsabilidad. +18</p>
+  <!-- ===== STREAM EN VIVO ===== -->
+  <section class="seccion">
+    <h2>RECLAMÁ TUS <span>BONOS</span></h2>
+    <p class="texto-chico">Entrá al stream y pedí tu bono en el chat.</p>
+
+    <!-- Reproductor de Kick embebido -->
+    <div class="video">
+      <iframe src="https://player.kick.com/cirotop?muted=true&autoplay=false" allowfullscreen></iframe>
+    </div>
+    <a href="https://kick.com/cirotop" target="_blank" class="boton">Ver en Kick ▸</a>
+  </section>
+
+  <!-- ===== PIE ===== -->
+  <footer class="pie">
+    <p class="logo">CIRO<span>TOP</span></p>
+    <p>Slots Streamer en Kick</p>
+    <p>© <span id="anio"></span> CIROTOP · +18 · Jugá con responsabilidad</p>
   </footer>
 
   <!-- El JS va al final para que el HTML ya esté cargado -->
