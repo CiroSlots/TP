@@ -1,0 +1,236 @@
+/* ===== VARIABLES DE COLORES ===== */
+/* Las defino una vez y las uso en todo el archivo */
+:root {
+  --fondo: #0b0f14;      /* negro azulado */
+  --tarjeta: #141b24;    /* fondo de las cajas */
+  --verde: #00ff88;      /* verde neón */
+  --cian: #00e5ff;       /* cian neón */
+  --texto: #e6edf3;      /* texto claro */
+}
+
+/* ===== ESTILOS GENERALES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* el padding no agranda las cajas */
+}
+
+html {
+  scroll-behavior: smooth; /* scroll suave al tocar el menú */
+}
+
+body {
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: 'Orbitron', sans-serif;
+}
+
+h1, h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 2px;
+}
+
+/* ===== MENÚ ===== */
+.menu {
+  position: sticky;   /* queda fijo arriba al hacer scroll */
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: rgba(11, 15, 20, 0.95);
+  border-bottom: 2px solid var(--verde);
+  z-index: 10;
+}
+
+.logo {
+  font-size: 2rem;
+  color: var(--verde);
+}
+
+.logo span {
+  color: var(--cian);
+}
+
+.nav a {
+  color: var(--texto);
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 0.9rem;
+}
+
+.nav a:hover {
+  color: var(--verde);
+}
+
+/* El botón ☰ está oculto en compu */
+.btn-menu {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--verde);
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* ===== INICIO ===== */
+.inicio {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.inicio h2 {
+  font-size: 4rem;
+  color: var(--verde);
+  text-shadow: 0 0 15px var(--verde); /* efecto neón */
+}
+
+.inicio p {
+  margin: 20px 0 30px;
+}
+
+/* ===== BOTONES ===== */
+.boton {
+  display: inline-block;
+  padding: 12px 30px;
+  background: var(--verde);
+  color: var(--fondo);
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.boton:hover {
+  background: var(--cian);
+  box-shadow: 0 0 20px var(--cian);
+}
+
+/* ===== SECCIONES ===== */
+.seccion {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px 20px;
+  background: var(--tarjeta);
+  border: 1px solid var(--cian);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.seccion h2 {
+  font-size: 2.5rem;
+  color: var(--cian);
+  margin-bottom: 10px;
+}
+
+/* ===== CONTADOR ===== */
+.contador {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.contador div {
+  background: var(--fondo);
+  border: 1px solid var(--verde);
+  border-radius: 8px;
+  padding: 10px;
+  width: 75px;
+}
+
+.contador span {
+  display: block;
+  font-size: 1.6rem;
+  color: var(--verde);
+}
+
+.contador small {
+  font-size: 0.7rem;
+}
+
+/* ===== TABLA ===== */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th {
+  color: var(--verde);
+  padding: 10px;
+  border-bottom: 2px solid var(--verde);
+}
+
+.tabla td {
+  padding: 10px;
+  border-bottom: 1px solid #2a3440;
+}
+
+/* Clase que el JS le pone al 1er puesto */
+.primero td {
+  color: gold;
+  font-weight: 700;
+}
+
+/* ===== RULETA ===== */
+.resultado {
+  font-size: 2rem;
+  color: var(--verde);
+  margin: 30px 0;
+  min-height: 50px;
+}
+
+/* ===== PIE ===== */
+.pie {
+  text-align: center;
+  padding: 30px;
+  font-size: 0.8rem;
+  border-top: 2px solid var(--verde);
+  margin-top: 40px;
+}
+
+.pie a {
+  color: var(--cian);
+}
+
+.pie p {
+  margin: 5px 0;
+}
+
+/* ===== CELULAR (pantallas chicas) ===== */
+@media (max-width: 700px) {
+  .btn-menu {
+    display: block; /* aparece el ☰ */
+  }
+
+  .nav {
+    display: none; /* el menú arranca oculto */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--fondo);
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Cuando el JS le agrega la clase "abierto", se muestra */
+  .nav.abierto {
+    display: flex;
+  }
+
+  .nav a {
+    margin: 10px 0;
+  }
+
+  .inicio h2 {
+    font-size: 2.8rem;
+  }
+
+  .tabla {
+    font-size: 0.7rem;
+  }
+}

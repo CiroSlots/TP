@@ -1,313 +1,87 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CiroTop — Slots en vivo</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
-<style>
-  /* Misma paleta que ciroslots.com */
-  :root {
-    --bg: #070b08;
-    --verde: #53fc18;
-    --verde-suave: rgba(83,252,24,0.14);
-    --oro: #d4af37;
-    --oro-claro: #f2cf6b;
-    --crema: #f1f4ee;
-    --linea: rgba(255,255,255,0.08);
-    --apagado: #82988a;
-  }
+  <!-- Configuración básica de la página -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CiroSlots</title>
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  <!-- Fuentes de Google (las mismas que uso en la marca) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
-  body {
-    color: var(--crema);
-    font-family: 'DM Sans', sans-serif;
-    /* luces verdes y doradas de fondo, fijas para que no se muevan al scrollear */
-    background:
-      radial-gradient(ellipse 60% 45% at 78% 0%, rgba(83,252,24,0.11), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 8% 25%, rgba(212,175,55,0.07), transparent 55%),
-      var(--bg);
-    background-attachment: fixed;
-    min-height: 100vh;
-  }
-
-  /* La grillita verde de fondo que se desvanece hacia los bordes */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-image:
-      linear-gradient(rgba(83,252,24,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(83,252,24,0.03) 1px, transparent 1px);
-    background-size: 64px 64px;
-    mask-image: radial-gradient(ellipse 75% 70% at 60% 15%, black, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 60% 15%, black, transparent 70%);
-  }
-
-  a { color: var(--verde); text-decoration: none; }
-
-  /* ----- Barra de arriba con forma de píldora ----- */
-  nav {
-    position: sticky;
-    top: 14px;
-    z-index: 10;
-    max-width: 1100px;
-    margin: 14px auto 0;
-    width: calc(100% - 32px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 12px 10px 24px;
-    background: rgba(14,18,15,0.75);
-    backdrop-filter: blur(18px);
-    border: 1px solid var(--linea);
-    border-radius: 999px;
-  }
-  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--crema); }
-  .logo span { color: var(--verde); }
-  .btn-vivo {
-    display: flex; align-items: center; gap: 10px;
-    padding: 6px 18px 6px 6px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--linea);
-    color: #fff; font-weight: 700; font-size: 0.85rem;
-  }
-  /* el circulito verde con el play lo hago con un pseudo-elemento, sin imagen */
-  .btn-vivo::before {
-    content: '▶';
-    display: grid; place-items: center;
-    width: 30px; height: 30px; border-radius: 50%;
-    background: var(--verde); color: #06140a; font-size: 0.6rem;
-  }
-
-  /* ----- Cartel que pasa de derecha a izquierda ----- */
-  .ticker { overflow: hidden; margin-top: 16px; padding: 8px 0; border-block: 1px solid var(--linea); background: rgba(6,20,11,0.6); }
-  .ticker-track {
-    display: flex; gap: 48px; width: max-content;
-    animation: marquee 22s linear infinite;
-  }
-  .ticker-track span { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; color: var(--apagado); white-space: nowrap; }
-  /* el texto está repetido dos veces en el HTML, así cuando llega a la mitad vuelve al inicio y no se nota el corte */
-  @keyframes marquee { to { transform: translateX(-50%); } }
-
-  /* ----- Portada ----- */
-  .hero { text-align: center; padding: 70px 20px 50px; }
-  .marca {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3.5rem, 10vw, 6rem);
-    letter-spacing: 5px;
-    text-shadow: 0 0 40px rgba(83,252,24,0.25);
-  }
-  .marca span { color: var(--verde); text-shadow: 0 0 30px rgba(83,252,24,0.55); }
-  .lema { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.3rem, 4vw, 2rem); margin-bottom: 24px; }
-  .lema em { color: var(--verde); }
-
-  .badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--verde-suave);
-    border: 1px solid rgba(83,252,24,0.3);
-    border-radius: 30px;
-    padding: 7px 16px;
-    font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--verde);
-    margin-bottom: 24px;
-  }
-  .badge::before { content: '●'; animation: titila 1.2s infinite; }
-  @keyframes titila { 50% { opacity: 0.25; } }
-
-  .caja-codigo {
-    display: inline-flex; align-items: center; gap: 14px;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(212,175,55,0.25);
-    border-radius: 12px;
-    padding: 10px 14px 10px 20px;
-  }
-  .caja-codigo .lbl { font-size: 0.55rem; letter-spacing: 1.5px; color: var(--apagado); text-transform: uppercase; text-align: left; }
-  .caja-codigo .val { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; color: var(--oro-claro); }
-
-  /* ----- Botones ----- */
-  button {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: 0.2s;
-  }
-  .btn-oro {
-    background: rgba(212,175,55,0.12);
-    border: 1px solid rgba(212,175,55,0.3);
-    color: var(--oro-claro);
-    padding: 8px 14px;
-    font-size: 0.7rem; letter-spacing: 1px;
-  }
-  .btn-oro:hover { background: rgba(212,175,55,0.22); }
-  .btn-verde {
-    background: var(--verde);
-    border: none;
-    color: #06140a;
-    padding: 12px 22px;
-    font-size: 0.8rem; letter-spacing: 1px;
-  }
-  .btn-verde:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(83,252,24,0.3); }
-  .btn-verde:disabled { opacity: 0.35; transform: none; box-shadow: none; cursor: not-allowed; }
-
-  /* línea separadora verde-dorado */
-  hr { border: none; height: 1px; background: linear-gradient(90deg, transparent, rgba(83,252,24,0.2) 25%, rgba(212,175,55,0.3) 50%, rgba(83,252,24,0.2) 75%, transparent); }
-
-  /* ----- Secciones ----- */
-  .seccion { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
-  .titulo { text-align: center; margin-bottom: 36px; }
-  .titulo h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 5vw, 3rem); }
-  .titulo p { color: var(--apagado); margin-top: 8px; }
-
-  /* ----- Tarjetas (LBs y blackjack comparten el mismo estilo) ----- */
-  .grilla {
-    display: grid;
-    /* tantas columnas como entren de mínimo 300px, en celu queda una sola */
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-  }
-  .card {
-    position: relative;
-    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.012));
-    border: 1px solid var(--linea);
-    border-radius: 20px;
-    overflow: hidden;
-    transition: transform 0.3s, border-color 0.3s;
-  }
-  .card:hover { transform: translateY(-5px); border-color: rgba(212,175,55,0.28); }
-  /* la rayita verde-dorada arriba de cada tarjeta */
-  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--verde), var(--oro)); }
-
-  .card-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--linea); }
-  .card-head .nombre { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 1px; }
-  .card-head .pozo { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--oro-claro); background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25); border-radius: 8px; padding: 3px 10px; }
-
-  .card-body { padding: 8px 0; min-height: 200px; }
-  .card-foot { display: flex; justify-content: space-between; padding: 12px 20px; background: rgba(0,0,0,0.15); border-top: 1px solid var(--linea); font-size: 0.7rem; color: var(--apagado); }
-  .card-foot b { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; color: var(--verde); letter-spacing: 1px; }
-
-  /* Fila de la LB: puesto | avatar | nombre | premio */
-  .fila { display: grid; grid-template-columns: 28px 34px 1fr auto; gap: 12px; align-items: center; padding: 10px 20px; }
-  .fila .pos { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; text-align: center; }
-  .fila .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #123018, #0a1c0f); border: 1px solid var(--linea); font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem; color: var(--verde); }
-  .fila .jugador { font-size: 0.85rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .fila .apostado { font-size: 0.66rem; color: var(--apagado); }
-  .fila .premio { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; color: var(--verde); }
-  .vacio { padding: 30px 20px; text-align: center; color: var(--apagado); font-size: 0.8rem; }
-
-  /* ----- Blackjack ----- */
-  .mesa { padding: 24px 20px; text-align: center; }
-  .mano-lbl { font-size: 0.6rem; letter-spacing: 2px; color: var(--apagado); text-transform: uppercase; margin-bottom: 8px; }
-  .cartas { display: flex; justify-content: center; gap: 8px; min-height: 64px; margin-bottom: 18px; }
-  /* cada carta es un div que arma el JS */
-  .carta {
-    width: 46px; height: 64px;
-    display: grid; place-items: center;
-    background: var(--crema); color: #06140a;
-    border-radius: 6px;
-    font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  }
-  #mensaje { min-height: 28px; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 1px; color: var(--oro-claro); margin-bottom: 12px; }
-  .botones { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
-
-  footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 28px 32px; border-top: 1px solid var(--linea); color: var(--apagado); font-size: 0.8rem; }
-
-  @media (max-width: 600px) {
-    nav { padding-left: 16px; }
-    footer { flex-direction: column; text-align: center; }
-  }
-</style>
+  <!-- Hoja de estilos -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<nav>
-  <a href="#" class="logo">CIRO<span>TOP</span></a>
-  <a href="https://kick.com/cirotop" target="_blank" class="btn-vivo">En Vivo en Kick</a>
-</nav>
+  <!-- ===== MENÚ DE NAVEGACIÓN ===== -->
+  <header class="menu">
+    <h1 class="logo">CIRO<span>SLOTS</span></h1>
 
-<div class="ticker">
-  <div class="ticker-track">
-    <span>🔴 EN VIVO TODOS LOS DÍAS 22:00 HS</span>
-    <span>CÓDIGO CIROTOP</span>
-    <span>LEADERBOARDS EN WINOVO Y RAZED</span>
-    <span>UNITE AL DISCORD</span>
-    <span>🔴 EN VIVO TODOS LOS DÍAS 22:00 HS</span>
-    <span>CÓDIGO CIROTOP</span>
-    <span>LEADERBOARDS EN WINOVO Y RAZED</span>
-    <span>UNITE AL DISCORD</span>
-  </div>
-</div>
+    <!-- Botón que solo se ve en celular para abrir/cerrar el menú -->
+    <button id="btnMenu" class="btn-menu">☰</button>
 
-<section class="hero">
-  <div class="marca">CIRO<span>TOP</span></div>
-  <p class="lema">Tu streamer <em>que sí te hace ganar.</em></p>
-  <div class="badge">Slots Streamer · Kick</div>
-  <br>
-  <div class="caja-codigo">
-    <div>
-      <div class="lbl">Código</div>
-      <div class="val">CIROTOP</div>
+    <nav id="nav" class="nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#leaderboard">Leaderboard</a>
+      <a href="#ruleta">Ruleta</a>
+      <a href="#redes">Redes</a>
+    </nav>
+  </header>
+
+  <!-- ===== SECCIÓN INICIO ===== -->
+  <section id="inicio" class="inicio">
+    <h2>BIENVENIDOS LOQUITOS</h2>
+    <p>Streams de slots en Kick, leaderboards con premios y mucho más.</p>
+    <a class="boton" href="https://kick.com/cirotop" target="_blank">VER EN KICK</a>
+  </section>
+
+  <!-- ===== SECCIÓN LEADERBOARD (RAZED) ===== -->
+  <section id="leaderboard" class="seccion">
+    <h2>LEADERBOARD RAZED</h2>
+    <p>Usá el código <strong>CIROTOP</strong> para participar.</p>
+
+    <!-- Contador regresivo: el JS va cambiando estos números -->
+    <div class="contador">
+      <div><span id="dias">00</span><small>Días</small></div>
+      <div><span id="horas">00</span><small>Horas</small></div>
+      <div><span id="minutos">00</span><small>Min</small></div>
+      <div><span id="segundos">00</span><small>Seg</small></div>
     </div>
-    <button class="btn-oro" onclick="copiarCodigo(this)">COPIAR</button>
-  </div>
-</section>
 
-<hr>
+    <!-- Tabla: las filas las agrega el JS -->
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Puesto</th>
+          <th>Jugador</th>
+          <th>Apostado</th>
+          <th>Premio</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoTabla"></tbody>
+    </table>
+  </section>
 
-<section class="seccion">
-  <div class="titulo">
-    <h2>Leaderboards</h2>
-    <p>Competí con el código CIROTOP y llevate premios reales</p>
-  </div>
-  <div class="grilla">
-    <div class="card">
-      <div class="card-head"><span class="nombre">WinOvo</span><span class="pozo" id="lb-winovo-prize">—</span></div>
-      <div class="card-body" id="lb-winovo-rows"><div class="vacio">Cargando...</div></div>
-      <div class="card-foot"><span>Termina en <b id="lb-winovo-timer">--</b></span></div>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="nombre">Razed</span><span class="pozo" id="lb-razed-prize">—</span></div>
-      <div class="card-body" id="lb-razed-rows"><div class="vacio">Cargando...</div></div>
-      <div class="card-foot"><span>Termina en <b id="lb-razed-timer">--</b></span></div>
-    </div>
-  </div>
-</section>
+  <!-- ===== SECCIÓN RULETA DE SLOTS ===== -->
+  <section id="ruleta" class="seccion">
+    <h2>RULETA DE SLOTS</h2>
+    <p>¿No sabés qué jugar? Girá la ruleta.</p>
 
-<hr>
+    <!-- Acá el JS muestra el nombre del slot -->
+    <div id="resultadoRuleta" class="resultado">???</div>
 
-<section class="seccion">
-  <div class="titulo">
-    <h2>Blackjack</h2>
-    <p>Llegá a 21 sin pasarte</p>
-  </div>
-  <div class="card" style="max-width: 520px; margin: 0 auto;">
-    <div class="card-head"><span class="nombre">Mesa CiroTop</span><span class="pozo">21</span></div>
-    <div class="mesa">
-      <div class="mano-lbl">Crupier · <span id="puntosCrupier">0</span></div>
-      <div class="cartas" id="cartasCrupier"></div>
-      <div class="mano-lbl">Vos · <span id="puntosJugador">0</span></div>
-      <div class="cartas" id="cartasJugador"></div>
-      <p id="mensaje">Tocá repartir</p>
-      <div class="botones">
-        <button class="btn-verde" onclick="repartir()">REPARTIR</button>
-        <button class="btn-verde" id="btnPedir" onclick="pedir()" disabled>PEDIR</button>
-        <button class="btn-verde" id="btnPlantarse" onclick="plantarse()" disabled>PLANTARSE</button>
-      </div>
-    </div>
-  </div>
-</section>
+    <button id="btnGirar" class="boton">GIRAR</button>
+  </section>
 
-<footer>
-  <span class="logo">CIRO<span>TOP</span></span>
-  <p>© 2026 CiroTop · Slots Streamer en Kick</p>
-  <p>+18 · Juego responsable</p>
-</footer>
+  <!-- ===== PIE DE PÁGINA ===== -->
+  <footer id="redes" class="pie">
+    <p>Seguime en <a href="https://kick.com/cirotop" target="_blank">KICK.COM/CIROTOP</a></p>
+    <p>© <span id="anio"></span> CiroSlots — Jugá con responsabilidad. +18</p>
+  </footer>
 
-<script src="app.js"></script>
+  <!-- El JS va al final para que el HTML ya esté cargado -->
+  <script src="script.js"></script>
 </body>
 </html>
